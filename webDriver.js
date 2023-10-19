@@ -1,13 +1,22 @@
-const {Builder, Browser, By, Key, until} = require('selenium-webdriver');
-var assert = require('assert');
+var webdriver = require("selenium-webdriver");
+var chrome = require("selenium-webdriver/chrome");
+var chromeOptions = new chrome.Options();
+var assert = require("assert");
+const { By, Key } = webdriver;
 
-(async function example() {
-    let driver = await new Builder().forBrowser(Browser.CHROME).build();
-    try {
-        driver.get('https://www.saucedemo.com/');
-        await driver.findElement(By.XPATH,"//input[@id='user-name']").sendKeys('standard_user');
-        await driver.findElement(By.XPATH,"//input[@id='user-name']").sendKeys('secret_sauce', Key.RETURN);
-    } finally {
-        await driver.quit();
-    }
-})();
+driver = new webdriver.Builder()
+    .forBrowser("chrome")
+    .setChromeOptions(chromeOptions)
+    .build();
+
+driver.get('https://www.saucedemo.com/');
+
+Assert.assertTrue(driver.findElement(By.xpath,"//input[@id='user-name']").isDisplayed());
+Assert.assertTrue(driver.findElement(By.xpath,"//input[@id='password']").isDisplayed());
+Assert.assertTrue(driver.findElement(By.className,"submit-button").isDisplayed());
+
+driver.findElement(By.xpath,"//input[@id='user-name']").sendKeys('standard_user');
+driver.findElement(By.xpath,"//input[@id='password']"); //.sendKeys('secret_sauce', Key.RETURN);
+driver.findElement(By.className,"submit-button").click();
+
+driver.close();
