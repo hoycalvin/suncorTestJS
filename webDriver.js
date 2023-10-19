@@ -4,19 +4,34 @@ var chromeOptions = new chrome.Options();
 var assert = require("assert");
 const { By, Key } = webdriver;
 
-driver = new webdriver.Builder()
-    .forBrowser("chrome")
-    .setChromeOptions(chromeOptions)
-    .build();
+(async function question1() {
+    driver = new webdriver.Builder()
+        .forBrowser("chrome")
+        .setChromeOptions(chromeOptions)
+        .build();
+    try {
+        await driver.get('https://www.saucedemo.com/');
 
-driver.get('https://www.saucedemo.com/');
+        const userNameTextBox = await driver.findElement(By.id("user-name"));
+        const passwordTextBox = await driver.findElement(By.id("password"));
+        const loginButton = await driver.findElement(By.className("submit-button"));
+        assert(userNameTextBox.isDisplayed());
+        assert(passwordTextBox.isDisplayed());
+        assert(loginButton.isDisplayed());
 
-Assert.assertTrue(driver.findElement(By.xpath,"//input[@id='user-name']").isDisplayed());
-Assert.assertTrue(driver.findElement(By.xpath,"//input[@id='password']").isDisplayed());
-Assert.assertTrue(driver.findElement(By.className,"submit-button").isDisplayed());
+        userNameTextBox.sendKeys("standard_user");
+        passwordTextBox.sendKeys("secret_sauce");
+        loginButton.click();
 
-driver.findElement(By.xpath,"//input[@id='user-name']").sendKeys('standard_user');
-driver.findElement(By.xpath,"//input[@id='password']").sendKeys('secret_sauce', Key.RETURN);
-driver.findElement(By.className,"submit-button").click();
+        const shoppingCartLink = driver.findElement(By.className("shopping_cart_link"));
+        const optionsMenuButton = driver.findElement(By.id("react-burger-menu-btn"));
+        const inventoryList = driver.findElement(By.className("inventory_list"));
+        assert(shoppingCartLink.isDisplayed());
+        assert(optionsMenuButton.isDisplayed());
+        assert(inventoryList.isDisplayed());
 
-driver.close();
+        driver.findElement(By.id("react-burger-menu-btn")).click();
+
+    } finally {
+        driver.quit();
+}})();
